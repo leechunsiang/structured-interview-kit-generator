@@ -2,6 +2,14 @@ import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { motion } from "framer-motion";
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
+
 export function Header() {
     return (
         <motion.header
@@ -17,10 +25,22 @@ export function Header() {
                 </span>
             </div>
 
-            <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="h-5 w-5" />
-                <span className="sr-only">Login</span>
-            </Button>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                        <User className="h-5 w-5" />
+                        <span className="sr-only">User menu</span>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                        <Link to="/login">Login</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link to="/signup">Sign Up</Link>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </motion.header>
     );
 }

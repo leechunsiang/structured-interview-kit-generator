@@ -2,7 +2,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+
 export function Hero() {
+    const navigate = useNavigate();
+
     return (
         <section className="relative overflow-hidden bg-background pt-16 md:pt-20 lg:pt-24">
             <div className="container mx-auto px-4">
@@ -20,7 +24,7 @@ export function Hero() {
                             Generate structured interview kits in seconds. Empower your HR team with AI-driven tools to find the best talent efficiently.
                         </p>
                         <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
-                            <Button size="lg" className="w-full sm:w-auto gap-2">
+                            <Button size="lg" className="w-full sm:w-auto gap-2" onClick={() => navigate('/login')}>
                                 Get Started <ArrowRight className="h-4 w-4" />
                             </Button>
                             <Button variant="outline" size="lg" className="w-full sm:w-auto">
