@@ -1,0 +1,117 @@
+export async function generateCompetencies(jobTitle: string, jobDescription: string, apiKey: string) {
+    const prompt = `
+      You are an expert HR consultant. Analyze the following job description and extract 3-5 key competencies required for the role.
+      
+      Job Title: ${jobTitle}
+      Job Description:
+      ${jobDescription.substring(0, 3000)} -- truncated if too long
+
+      Return a JSON array of objects with "name" and "description" keys.
+      Example:
+      [
+        { "name": "Strategic Planning", "description": "Ability to set long-term goals..." },
+        { "name": "Python Proficiency", "description": "Strong experience with Python..." }
+      ]
+    `;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'gpt-4o',
+            messages: [
+                { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
+                { role: 'user', content: prompt }
+            ],
+            response_format: { type: 'json_object' }
+        }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Failed to generate competencies');
+    }
+
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    let parsed;
+    try {
+        parsed = JSON.parse(content);
+    } catch (e) {
+        console.error("Failed to parse OpenAI response:", content);
+        return [];
+    }
+
+    if (Array.isArray(parsed)) return parsed;
+    if (parsed.competencies && Array.isArray(parsed.competencies)) return parsed.competencies;
+
+    // Fallback: try to find any array in the object
+    const values = Object.values(parsed);
+    const arrayValue = values.find(v => Array.isArray(v));
+    return arrayValue || [];
+}
+
+export async function generateQuestions(jobTitle: string, competencies: any[], apiKey: string) {
+    const prompt = `
+      You are an expert HR consultant. Generate interview questions for the following competencies for the role of ${jobTitle}.
+      
+      Competencies:
+      ${JSON.stringify(competencies)}
+
+      For EACH competency, generate 2 questions:
+      1. One "Behavioral" question (asking for past experience).
+      2. One "Competency" question (testing knowledge/skill).
+
+      Return a JSON array of objects with the following structure:
+      {
+        "competencyName": "Name of competency",
+        "text": "The question text",
+        "category": "Behavioral" or "Competency",
+        "explanation": "Why this question is good",
+        "rubric_good": "Indicators of a good answer",
+        "rubric_bad": "Red flags"
+      }
+    `;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'gpt-4o',
+            messages: [
+                { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
+                { role: 'user', content: prompt }
+            ],
+            response_format: { type: 'json_object' }
+        }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Failed to generate questions');
+    }
+
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    let parsed;
+    try {
+        parsed = JSON.parse(content);
+    } catch (e) {
+        console.error("Failed to parse OpenAI response:", content);
+        return [];
+    }
+
+    if (Array.isArray(parsed)) return parsed;
+    if (parsed.questions && Array.isArray(parsed.questions)) return parsed.questions;
+
+    // Fallback: try to find any array in the object
+    const values = Object.values(parsed);
+    const arrayValue = values.find(v => Array.isArray(v));
+    return arrayValue || [];
+}
