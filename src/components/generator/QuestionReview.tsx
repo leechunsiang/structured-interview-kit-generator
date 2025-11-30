@@ -20,10 +20,11 @@ interface QuestionReviewProps {
     setQuestions: (questions: Question[]) => void;
     onNext: () => void;
     onBack: () => void;
+    onGenerateMore: () => void;
     loading: boolean;
 }
 
-export function QuestionReview({ questions, setQuestions, onNext, onBack, loading }: QuestionReviewProps) {
+export function QuestionReview({ questions, setQuestions, onNext, onBack, onGenerateMore, loading }: QuestionReviewProps) {
 
     const handleDelete = (index: number) => {
         const newQuestions = [...questions];
@@ -46,7 +47,6 @@ export function QuestionReview({ questions, setQuestions, onNext, onBack, loadin
     }, {} as Record<string, Question[]>) : {};
 
     return (
-
         <div className="space-y-8 max-w-4xl mx-auto">
             <div className="flex justify-between items-center">
                 <div>
@@ -54,6 +54,9 @@ export function QuestionReview({ questions, setQuestions, onNext, onBack, loadin
                     <p className="text-lg text-muted-foreground mt-2">Review and refine the generated questions.</p>
                 </div>
                 <div className="space-x-2">
+                    <Button variant="secondary" onClick={onGenerateMore} disabled={loading}>
+                        {loading ? 'Generating...' : 'Generate More'}
+                    </Button>
                     <Button variant="outline" onClick={onBack} size="lg">Back</Button>
                     <Button onClick={onNext} disabled={loading || questions.length === 0} size="lg">
                         {loading ? 'Saving...' : 'Finalize Kit'}

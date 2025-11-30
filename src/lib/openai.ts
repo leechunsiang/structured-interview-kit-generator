@@ -54,16 +54,15 @@ export async function generateCompetencies(jobTitle: string, jobDescription: str
     return arrayValue || [];
 }
 
-export async function generateQuestions(jobTitle: string, competencies: any[], apiKey: string) {
+export async function generateQuestions(jobTitle: string, competencies: any[], apiKey: string, count: number = 2) {
     const prompt = `
       You are an expert HR consultant. Generate interview questions for the following competencies for the role of ${jobTitle}.
       
       Competencies:
       ${JSON.stringify(competencies)}
 
-      For EACH competency, generate 2 questions:
-      1. One "Behavioral" question (asking for past experience).
-      2. One "Competency" question (testing knowledge/skill).
+      For EACH competency, generate ${count} questions.
+      Mix of "Behavioral" and "Competency" types.
 
       Return a JSON array of objects with the following structure:
       {

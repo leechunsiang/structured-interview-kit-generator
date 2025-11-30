@@ -141,6 +141,23 @@ export function Generator() {
         setStep('job-input');
     };
 
+    const handleGenerateMore = async () => {
+        setLoading(true);
+        try {
+            const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+            if (!apiKey) throw new Error('Missing OpenAI API Key');
+
+            // Generate 1 more question per competency
+            const newQuestions = await generateQuestions(jobData?.title || '', competencies, apiKey, 1);
+            setQuestions([...questions, ...newQuestions]);
+        } catch (error: any) {
+            console.error('Error generating more questions:', error);
+            alert(error.message || 'Failed to generate more questions.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
             <div className="border-b">
@@ -174,6 +191,7 @@ export function Generator() {
                         setQuestions={setQuestions}
                         onNext={handleQuestionsConfirm}
                         onBack={() => setStep('competency-review')}
+                        onGenerateMore={handleGenerateMore}
                         loading={loading}
                     />
                 )}
