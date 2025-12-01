@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import { toast } from 'sonner';
 
 // Set worker source for pdfjs-dist
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
@@ -56,7 +57,7 @@ export function JobInputForm({ onNext, loading }: JobInputFormProps) {
                 setDescription(finalDescription); // Update state for visibility
             } catch (error) {
                 console.error('Error parsing PDF:', error);
-                alert('Failed to parse PDF. Please try pasting the text manually.');
+                toast.error('Failed to parse PDF. Please try pasting the text manually.');
                 setParsing(false);
                 return;
             }
@@ -64,7 +65,7 @@ export function JobInputForm({ onNext, loading }: JobInputFormProps) {
         }
 
         if (!finalDescription.trim()) {
-            alert('Please provide a job description.');
+            toast.error('Please provide a job description.');
             return;
         }
 
@@ -72,13 +73,13 @@ export function JobInputForm({ onNext, loading }: JobInputFormProps) {
     };
 
     return (
-        <Card className="w-full max-w-2xl mx-auto">
+        <Card className="w-full max-w-3xl mx-auto hover:shadow-elevated p-8">
             <CardHeader>
-                <CardTitle>Job Details</CardTitle>
-                <CardDescription>Enter the job title and description to get started.</CardDescription>
+                <CardTitle className="text-2xl">Job Details</CardTitle>
+                <CardDescription className="text-base mt-2">Enter the job title and description to extract key competencies and generate interview questions.</CardDescription>
             </CardHeader>
             <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="space-y-2">
                         <Label htmlFor="title">Job Title</Label>
                         <Input
@@ -122,7 +123,7 @@ export function JobInputForm({ onNext, loading }: JobInputFormProps) {
                         </TabsContent>
                     </Tabs>
 
-                    <Button type="submit" className="w-full" disabled={loading || parsing}>
+                    <Button type="submit" variant="accent" size="lg" className="w-full" disabled={loading || parsing}>
                         {parsing ? 'Parsing PDF...' : loading ? 'Analyzing...' : 'Analyze & Extract Competencies'}
                     </Button>
                 </form>

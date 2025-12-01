@@ -8,6 +8,7 @@ import { SignUp } from './pages/SignUp';
 import { Generator } from './pages/Generator';
 import { Dashboard } from './pages/Dashboard';
 import { JobDetails } from './pages/JobDetails';
+import { Toaster } from 'sonner';
 
 function LandingPage() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/dashboard/:jobId" element={<JobDetails />} />
           </Route>
         </Routes>
+        <Toaster position="top-right" richColors />
       </BrowserRouter>
     </AuthProvider>
   );

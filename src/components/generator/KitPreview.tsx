@@ -109,23 +109,53 @@ export function KitPreview({ jobTitle, questions, onReset, viewOnly = false }: K
             </Card>
 
             <div className="text-left">
-                <h3 className="text-xl font-semibold mb-4">Preview</h3>
+                <h3 className="text-2xl font-bold mb-6 text-foreground">Interview Kit Preview</h3>
                 <div className="space-y-6">
                     {questions.map((q, i) => (
-                        <div key={i} className="p-4 border rounded-md bg-card">
-                            <div className="flex justify-between mb-2">
-                                <span className="font-semibold text-sm text-muted-foreground">{q.competencyName}</span>
-                                <Badge variant="outline">{q.category}</Badge>
-                            </div>
-                            <p className="font-medium mb-4">{q.text}</p>
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div className="p-3 bg-green-50 rounded border border-green-100">
-                                    <span className="font-semibold text-green-700 block mb-1">Good Signs</span>
-                                    {q.rubric_good}
+                        <div key={i} className="rounded-xl border-2 bg-card shadow-md hover:shadow-lg transition-shadow">
+                            {/* Question Header */}
+                            <div className="flex items-center justify-between p-6 border-b bg-muted/10">
+                                <div className="flex items-center gap-4">
+                                    {/* Question Number */}
+                                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold shadow-md">
+                                        {i + 1}
+                                    </div>
+                                    <div className="space-y-1">
+                                        <span className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">{q.competencyName}</span>
+                                        <Badge variant="outline" className="ml-2">{q.category}</Badge>
+                                    </div>
                                 </div>
-                                <div className="p-3 bg-red-50 rounded border border-red-100">
-                                    <span className="font-semibold text-red-700 block mb-1">Red Flags</span>
-                                    {q.rubric_bad}
+                            </div>
+
+                            {/* Question Text */}
+                            <div className="px-8 py-6">
+                                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
+                                    Question {i + 1}
+                                </label>
+                                <p className="text-xl font-semibold leading-relaxed question-text text-foreground">
+                                    {q.text}
+                                </p>
+                            </div>
+
+                            {/* Rubrics */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-8 pb-6">
+                                <div className="p-5 bg-gradient-to-br from-green-50 to-emerald-50/50 dark:from-green-950/20 dark:to-emerald-950/10 rounded-lg border-2 border-green-200/50 dark:border-green-900/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="h-3 w-3 rounded-full bg-green-600" />
+                                        <span className="font-bold text-sm text-green-800 dark:text-green-400 uppercase tracking-wide">✅ Good Signs</span>
+                                    </div>
+                                    <p className="text-sm leading-relaxed text-green-900 dark:text-green-100 font-readable">
+                                        {q.rubric_good}
+                                    </p>
+                                </div>
+                                <div className="p-5 bg-gradient-to-br from-red-50 to-rose-50/50 dark:from-red-950/20 dark:to-rose-950/10 rounded-lg border-2 border-red-200/50 dark:border-red-900/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="h-3 w-3 rounded-full bg-red-600" />
+                                        <span className="font-bold text-sm text-red-800 dark:text-red-400 uppercase tracking-wide">🚩 Red Flags</span>
+                                    </div>
+                                    <p className="text-sm leading-relaxed text-red-900 dark:text-red-100 font-readable">
+                                        {q.rubric_bad}
+                                    </p>
                                 </div>
                             </div>
                         </div>

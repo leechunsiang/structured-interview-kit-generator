@@ -7,6 +7,7 @@ import { CompetencyList, type Competency } from '@/components/generator/Competen
 import { QuestionReview, type Question } from '@/components/generator/QuestionReview';
 import { KitPreview } from '@/components/generator/KitPreview';
 import { AppHeader } from '@/components/AppHeader';
+import { toast } from 'sonner';
 
 type Step = 'job-input' | 'competency-review' | 'question-review' | 'kit-preview';
 
@@ -33,7 +34,7 @@ export function Generator() {
             setStep('competency-review');
         } catch (error: any) {
             console.error('Error extracting competencies:', error);
-            alert(error.message || 'Failed to extract competencies.');
+            toast.error(error.message || 'Failed to extract competencies.');
         } finally {
             setLoading(false);
         }
@@ -51,7 +52,7 @@ export function Generator() {
             setStep('question-review');
         } catch (error: any) {
             console.error('Error generating questions:', error);
-            alert(error.message || 'Failed to generate questions.');
+            toast.error(error.message || 'Failed to generate questions.');
         } finally {
             setLoading(false);
         }
@@ -125,10 +126,11 @@ export function Generator() {
                 }
             }
 
+            toast.success('Interview kit saved successfully!');
             setStep('kit-preview');
         } catch (error) {
             console.error('Error saving kit:', error);
-            alert('Failed to save interview kit.');
+            toast.error('Failed to save interview kit.');
         } finally {
             setLoading(false);
         }
@@ -150,9 +152,10 @@ export function Generator() {
             // Generate 1 more question per competency
             const newQuestions = await generateQuestions(jobData?.title || '', competencies, apiKey, 1);
             setQuestions([...questions, ...newQuestions]);
+            toast.success(`Generated ${newQuestions.length} more questions!`);
         } catch (error: any) {
             console.error('Error generating more questions:', error);
-            alert(error.message || 'Failed to generate more questions.');
+            toast.error(error.message || 'Failed to generate more questions.');
         } finally {
             setLoading(false);
         }
@@ -162,7 +165,7 @@ export function Generator() {
         <div className="min-h-screen bg-background">
             <AppHeader />
 
-            <main className="container mx-auto py-8 px-4">
+            <main className="container mx-auto py-12 px-6 max-w-5xl">
                 {step === 'job-input' && (
                     <JobInputForm onNext={handleJobSubmit} loading={loading} />
                 )}
