@@ -9,7 +9,7 @@ export interface Question {
     competency_id?: string; // Optional for UI state before saving
     competencyName?: string; // Helper for UI grouping
     text: string;
-    category: 'Competency' | 'Behavioral' | 'Situational';
+    category: 'Competency' | 'Behavioral' | 'Situational' | 'Deceiving';
     explanation: string;
     rubric_good: string;
     rubric_bad: string;
@@ -77,7 +77,14 @@ export function QuestionReview({ questions, setQuestions, onNext, onBack, onGene
                                     {/* Header Section */}
                                     <div className="flex items-start justify-between p-6 pb-4">
                                         <div className="space-y-1">
-                                            <Badge variant={q.category === 'Behavioral' ? 'default' : 'secondary'} className="mb-2 text-sm px-3 py-1">
+                                            <Badge
+                                                variant={
+                                                    q.category === 'Behavioral' ? 'default' :
+                                                        q.category === 'Deceiving' ? 'destructive' :
+                                                            'secondary'
+                                                }
+                                                className="mb-2 text-sm px-3 py-1"
+                                            >
                                                 {q.category}
                                             </Badge>
                                         </div>

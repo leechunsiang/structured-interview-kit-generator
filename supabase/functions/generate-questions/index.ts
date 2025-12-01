@@ -13,15 +13,16 @@ try {
       Competencies:
       ${JSON.stringify(competencies)}
 
-      For EACH competency, generate 2 questions:
+      For EACH competency, generate 3 questions:
       1. One "Behavioral" question (asking for past experience).
       2. One "Competency" question (testing knowledge/skill).
+      3. One "Deceiving" question (a trick question to test if the candidate can identify a false premise or handle a tricky situation).
 
       Return a JSON array of objects with the following structure:
       {
         "competencyName": "Name of competency",
         "text": "The question text",
-        "category": "Behavioral" or "Competency",
+        "category": "Behavioral", "Competency", or "Deceiving",
         "explanation": "Why this question is good",
         "rubric_good": "Indicators of a good answer",
         "rubric_bad": "Red flags"
