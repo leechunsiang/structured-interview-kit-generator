@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { generateCompetencies, generateQuestions } from '../lib/openai';
 import { useAuth } from '../components/AuthProvider';
 import { supabase } from '../lib/supabase';
-import { Button } from '@/components/ui/button';
 import { JobInputForm } from '@/components/generator/JobInputForm';
 import { CompetencyList, type Competency } from '@/components/generator/CompetencyList';
 import { QuestionReview, type Question } from '@/components/generator/QuestionReview';
 import { KitPreview } from '@/components/generator/KitPreview';
+import { AppHeader } from '@/components/AppHeader';
 
 type Step = 'job-input' | 'competency-review' | 'question-review' | 'kit-preview';
 
 export function Generator() {
-    const { user, signOut } = useAuth();
+    const { user } = useAuth();
     const [step, setStep] = useState<Step>('job-input');
     const [loading, setLoading] = useState(false);
     // State for data
@@ -160,15 +160,7 @@ export function Generator() {
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="border-b">
-                <div className="flex h-16 items-center px-4 container mx-auto justify-between">
-                    <h1 className="text-xl font-bold">Interview Kit Generator</h1>
-                    <div className="flex items-center gap-4">
-                        <span className="text-sm text-muted-foreground">{user?.email}</span>
-                        <Button variant="outline" size="sm" onClick={signOut}>Sign Out</Button>
-                    </div>
-                </div>
-            </div>
+            <AppHeader />
 
             <main className="container mx-auto py-8 px-4">
                 {step === 'job-input' && (

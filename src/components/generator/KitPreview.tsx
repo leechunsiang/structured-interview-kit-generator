@@ -9,9 +9,10 @@ interface KitPreviewProps {
     jobTitle: string;
     questions: Question[];
     onReset: () => void;
+    viewOnly?: boolean;
 }
 
-export function KitPreview({ jobTitle, questions, onReset }: KitPreviewProps) {
+export function KitPreview({ jobTitle, questions, onReset, viewOnly = false }: KitPreviewProps) {
 
     const handleExportPDF = () => {
         const doc = new jsPDF();
@@ -78,28 +79,32 @@ export function KitPreview({ jobTitle, questions, onReset }: KitPreviewProps) {
 
     return (
         <div className="max-w-3xl mx-auto text-center space-y-8">
-            <div className="space-y-4">
-                <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
+            {!viewOnly && (
+                <div className="space-y-4">
+                    <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-8 h-8 text-green-600" />
+                    </div>
+                    <h2 className="text-3xl font-bold">Interview Kit Ready!</h2>
+                    <p className="text-muted-foreground">
+                        Your structured interview kit for <strong>{jobTitle}</strong> has been generated and saved.
+                    </p>
                 </div>
-                <h2 className="text-3xl font-bold">Interview Kit Ready!</h2>
-                <p className="text-muted-foreground">
-                    Your structured interview kit for <strong>{jobTitle}</strong> has been generated and saved.
-                </p>
-            </div>
+            )}
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Actions</CardTitle>
+                    <CardTitle>{viewOnly ? 'Interview Kit Actions' : 'Actions'}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button onClick={handleExportPDF} className="w-full sm:w-auto">
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF
                     </Button>
-                    <Button variant="outline" onClick={onReset} className="w-full sm:w-auto">
-                        Create Another Kit
-                    </Button>
+                    {!viewOnly && (
+                        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto">
+                            Create Another Kit
+                        </Button>
+                    )}
                 </CardContent>
             </Card>
 

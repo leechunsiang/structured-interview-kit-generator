@@ -6,6 +6,8 @@ import { Header } from './components/Header';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { Generator } from './pages/Generator';
+import { Dashboard } from './pages/Dashboard';
+import { JobDetails } from './pages/JobDetails';
 
 function LandingPage() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/generator" element={<Generator />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/:jobId" element={<JobDetails />} />
           </Route>
         </Routes>
       </BrowserRouter>
