@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 /* Google Fonts for better typography */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -51,8 +51,8 @@
 
 :root {
   /* Typography */
-  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-readable: 'Merriweather', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-readable: 'Noto Sans', sans-serif;
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);
