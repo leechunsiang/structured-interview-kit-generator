@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Download, CheckCircle } from 'lucide-react';
 import jsPDF from 'jspdf';
@@ -78,9 +77,9 @@ export function KitPreview({ jobTitle, questions, onReset, viewOnly = false }: K
     };
 
     return (
-        <div className="max-w-3xl mx-auto text-center space-y-8">
+        <div className="max-w-3xl mx-auto space-y-8">
             {!viewOnly && (
-                <div className="space-y-4">
+                <div className="text-center space-y-4">
                     <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
                         <CheckCircle className="w-8 h-8 text-green-600" />
                     </div>
@@ -91,25 +90,25 @@ export function KitPreview({ jobTitle, questions, onReset, viewOnly = false }: K
                 </div>
             )}
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>{viewOnly ? 'Interview Kit Actions' : 'Actions'}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button onClick={handleExportPDF} className="w-full sm:w-auto">
+            {/* Header with Actions */}
+            <div className="flex items-center justify-between pb-6 border-b">
+                <h3 className="text-2xl font-bold text-foreground">
+                    {viewOnly ? 'Interview Kit' : 'Interview Kit Preview'}
+                </h3>
+                <div className="flex gap-3">
+                    <Button onClick={handleExportPDF} variant="accent" size="lg">
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF
                     </Button>
                     {!viewOnly && (
-                        <Button variant="outline" onClick={onReset} className="w-full sm:w-auto">
+                        <Button variant="outline" onClick={onReset} size="lg">
                             Create Another Kit
                         </Button>
                     )}
-                </CardContent>
-            </Card>
+                </div>
+            </div>
 
             <div className="text-left">
-                <h3 className="text-2xl font-bold mb-6 text-foreground">Interview Kit Preview</h3>
                 <div className="space-y-6">
                     {questions.map((q, i) => (
                         <div key={i} className="rounded-xl border-2 bg-card shadow-md hover:shadow-lg transition-shadow">

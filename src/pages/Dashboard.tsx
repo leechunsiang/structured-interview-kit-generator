@@ -5,7 +5,7 @@ import { AppHeader } from '../components/AppHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Loader2, Calendar, ArrowRight, FolderOpen } from 'lucide-react';
+import { Loader2, Calendar, ArrowRight, FolderOpen, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Job {
@@ -52,6 +52,29 @@ export function Dashboard() {
         fetchJobs();
     }, [user]);
 
+    const handleDeleteJob = async (e: React.MouseEvent, jobId: string) => {
+        e.preventDefault(); // Prevent navigation
+        e.stopPropagation(); // Prevent card click
+
+        if (!window.confirm('Are you sure you want to delete this interview kit? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const { error } = await supabase
+                .from('jobs')
+                .delete()
+                .eq('id', jobId);
+
+            if (error) throw error;
+
+            setJobs(jobs.filter(job => job.id !== jobId));
+        } catch (error) {
+            console.error('Error deleting job:', error);
+            alert('Failed to delete the interview kit. Please try again.');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
             <AppHeader />
@@ -80,12 +103,21 @@ export function Dashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {jobs.map((job) => (
                             <Card key={job.id} className="flex flex-col hover:shadow-elevated-lg hover:scale-[1.02] cursor-pointer group">
-                                <CardHeader>
+                                <CardHeader className="relative pr-12">
                                     <CardTitle className="line-clamp-1 text-xl" title={job.title}>{job.title}</CardTitle>
                                     <CardDescription className="flex items-center gap-1">
                                         <Calendar className="h-3 w-3" />
                                         {format(new Date(job.created_at), 'MMM d, yyyy')}
                                     </CardDescription>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute top-4 right-4 h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                                        onClick={(e) => handleDeleteJob(e, job.id)}
+                                        title="Delete Kit"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-between gap-4">
                                     <p className="text-sm text-muted-foreground line-clamp-3">
