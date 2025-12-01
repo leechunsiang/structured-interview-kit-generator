@@ -8,6 +8,7 @@ import { SignUp } from './pages/SignUp';
 import { Generator } from './pages/Generator';
 import { Dashboard } from './pages/Dashboard';
 import { JobDetails } from './pages/JobDetails';
+import { AppLayout } from './components/AppLayout';
 import { Toaster } from 'sonner';
 
 function LandingPage() {
@@ -28,9 +29,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/generator" element={<Generator />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/:jobId" element={<JobDetails />} />
+            <Route element={<AppLayout />}>
+              <Route path="/generator" element={<Generator />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/:jobId" element={<JobDetails />} />
+            </Route>
           </Route>
         </Routes>
         <Toaster position="top-right" richColors />

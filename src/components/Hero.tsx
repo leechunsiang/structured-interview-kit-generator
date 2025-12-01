@@ -1,87 +1,119 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "lucide-react";
-
+import GradientText from "@/components/GradientText";
+import LiquidEther from "@/components/LiquidEther";
 import { useNavigate } from "react-router-dom";
 
 export function Hero() {
     const navigate = useNavigate();
+    const supportingText = "Generate structured interview kits in seconds. Empower your HR team with AI-driven tools to find the best talent efficiently.";
 
     return (
-        <section className="relative overflow-hidden bg-background pt-16 md:pt-20 lg:pt-24">
-            <div className="container mx-auto px-4">
-                <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="flex flex-col justify-center text-center lg:text-left"
+        <section className="relative overflow-hidden bg-background flex items-center" style={{ minHeight: '100vh' }}>
+            {/* Liquid Ether Background */}
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
+                <LiquidEther
+                    colors={['#00FF00', '#B4FFB4', '#00FF00']}
+                    mouseForce={20}
+                    cursorSize={100}
+                    isViscous={false}
+                    viscous={30}
+                    iterationsViscous={32}
+                    iterationsPoisson={32}
+                    resolution={0.5}
+                    isBounce={false}
+                    autoDemo={true}
+                    autoSpeed={0.5}
+                    autoIntensity={2.2}
+                    takeoverDuration={0.25}
+                    autoResumeDelay={3000}
+                    autoRampDuration={0.6}
+                />
+            </div>
+
+            {/* Hero Content */}
+            <div className="container mx-auto px-4 relative z-10 w-full">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex flex-col justify-center text-center max-w-4xl mx-auto"
+                >
+                    <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl pb-4 mb-2 leading-tight">
+                        <GradientText
+                            colors={['#40ffaa', '#4079ff', '#40ffaa', '#4079ff', '#40ffaa']}
+                            animationSpeed={3}
+                            className="inline-block overflow-visible leading-normal"
+                        >
+                            Streamline Your Hiring Process
+                        </GradientText>
+                    </h1>
+                    <motion.p
+                        className="mt-6 text-lg text-muted-foreground mx-auto max-w-2xl bg-transparent"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
-                            Streamline Your <span className="text-primary">Hiring Process</span>
-                        </h1>
-                        <p className="mt-4 text-lg text-muted-foreground sm:mx-auto sm:max-w-xl lg:mx-0">
-                            Generate structured interview kits in seconds. Empower your HR team with AI-driven tools to find the best talent efficiently.
-                        </p>
-                        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
+                        <motion.span
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{
+                                duration: 2,
+                                delay: 0.5,
+                                ease: "easeInOut"
+                            }}
+                            style={{
+                                display: "inline-block",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                verticalAlign: "bottom",
+                                backgroundColor: "transparent"
+                            }}
+                        >
+                            {supportingText}
+                        </motion.span>
+                    </motion.p>
+                    <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+                        <motion.div
+                            whileHover={{
+                                scale: 1.05,
+                                boxShadow: "0 10px 30px rgba(64, 255, 170, 0.3)"
+                            }}
+                            whileTap={{
+                                scale: 0.95,
+                                boxShadow: "0 5px 15px rgba(64, 255, 170, 0.2)"
+                            }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.5,
+                                delay: 0.7,
+                                type: "spring",
+                                stiffness: 260,
+                                damping: 20
+                            }}
+                        >
                             <Button size="lg" className="w-full sm:w-auto gap-2" onClick={() => navigate('/login')}>
                                 Get Started <ArrowRight className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                                Learn More
-                            </Button>
+                        </motion.div>
+                    </div>
+                    <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-primary" />
+                            <span>AI-Powered</span>
                         </div>
-                        <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-primary" />
-                                <span>AI-Powered</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-primary" />
-                                <span>Structured Kits</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-primary" />
-                                <span>Bias Reduction</span>
-                            </div>
+                        <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-primary" />
+                            <span>Structured Kits</span>
                         </div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                        className="relative mx-auto w-full max-w-[500px] lg:max-w-none"
-                    >
-                        <div className="relative aspect-square overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 p-8 shadow-2xl ring-1 ring-gray-900/10 dark:ring-gray-100/10">
-                            {/* Abstract visual representation */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="grid grid-cols-2 gap-4 opacity-80">
-                                    <motion.div
-                                        animate={{ y: [0, -10, 0] }}
-                                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                                        className="h-32 w-32 rounded-2xl bg-primary/40 backdrop-blur-sm"
-                                    />
-                                    <motion.div
-                                        animate={{ y: [0, 10, 0] }}
-                                        transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
-                                        className="h-32 w-32 rounded-2xl bg-secondary/60 backdrop-blur-sm mt-12"
-                                    />
-                                    <motion.div
-                                        animate={{ y: [0, -15, 0] }}
-                                        transition={{ repeat: Infinity, duration: 6, ease: "easeInOut", delay: 0.5 }}
-                                        className="h-32 w-32 rounded-2xl bg-accent/60 backdrop-blur-sm"
-                                    />
-                                    <motion.div
-                                        animate={{ y: [0, 15, 0] }}
-                                        transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 1.5 }}
-                                        className="h-32 w-32 rounded-2xl bg-primary/20 backdrop-blur-sm mt-8"
-                                    />
-                                </div>
-                            </div>
+                        <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-primary" />
+                            <span>Bias Reduction</span>
                         </div>
-                    </motion.div>
-                </div>
+                    </div>
+                </motion.div>
             </div>
         </section>
     );

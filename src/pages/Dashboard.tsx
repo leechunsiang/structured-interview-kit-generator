@@ -113,8 +113,8 @@ export function Dashboard() {
                                     {job.kit_score !== undefined && job.kit_score > 0 && (
                                         <div className="absolute top-4 right-14">
                                             <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs border-2 ${job.kit_score >= 80 ? 'bg-green-100 text-green-700 border-green-200' :
-                                                    job.kit_score >= 60 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
-                                                        'bg-red-100 text-red-700 border-red-200'
+                                                job.kit_score >= 60 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
+                                                    'bg-red-100 text-red-700 border-red-200'
                                                 }`}>
                                                 {job.kit_score}
                                             </div>
