@@ -9,7 +9,7 @@ import { type Question } from '@/components/generator/QuestionReview';
 
 export function JobDetails() {
     const { jobId } = useParams<{ jobId: string }>();
-    const [job, setJob] = useState<{ title: string; description: string } | null>(null);
+    const [job, setJob] = useState<{ title: string; description: string; kit_score?: number; kit_score_explanation?: string } | null>(null);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -21,7 +21,7 @@ export function JobDetails() {
                 // 1. Fetch Job
                 const { data: jobData, error: jobError } = await supabase
                     .from('jobs')
-                    .select('title, description')
+                    .select('title, description, kit_score, kit_score_explanation')
                     .eq('id', jobId)
                     .single();
 
@@ -122,6 +122,8 @@ export function JobDetails() {
                     questions={questions}
                     onReset={() => { }} // No-op for view only
                     viewOnly={true}
+                    kitScore={job.kit_score}
+                    kitScoreExplanation={job.kit_score_explanation}
                 />
             </main>
         </div>

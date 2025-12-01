@@ -114,3 +114,56 @@ export async function generateQuestions(jobTitle: string, competencies: any[], a
     const arrayValue = values.find(v => Array.isArray(v));
     return arrayValue || [];
 }
+
+export async function generateKitScore(jobTitle: string, jobDescription: string, questions: any[], apiKey: string) {
+    const prompt = `
+      You are an expert HR consultant. Evaluate the quality of the following interview kit for the role of ${jobTitle}.
+      
+      Job Description:
+      ${jobDescription.substring(0, 1000)}...
+
+      Generated Questions:
+      ${JSON.stringify(questions.map(q => ({ text: q.text, category: q.category })))}
+
+      Rate the quality of this interview kit on a scale of 0 to 100 based on:
+      1. Relevance to the job description.
+      2. Variety of question types (Behavioral, Competency, etc.).
+      3. Depth and clarity of questions.
+
+      Return a JSON object with:
+      {
+        "score": number (0-100),
+        "explanation": "A brief explanation of the score (max 2 sentences)."
+      }
+    `;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'gpt-4o',
+            messages: [
+                { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
+                { role: 'user', content: prompt }
+            ],
+            response_format: { type: 'json_object' }
+        }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Failed to generate kit score');
+    }
+
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    try {
+        return JSON.parse(content);
+    } catch (e) {
+        console.error("Failed to parse OpenAI response:", content);
+        return { score: 0, explanation: "Failed to generate score." };
+    }
+}

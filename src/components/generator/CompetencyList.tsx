@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trash2, Plus } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { Trash2, Plus, Loader2 } from 'lucide-react';
 
 export interface Competency {
     id?: string;
@@ -16,9 +17,11 @@ interface CompetencyListProps {
     onNext: () => void;
     onBack: () => void;
     loading: boolean;
+    progress?: number;
+    loadingStatus?: string;
 }
 
-export function CompetencyList({ competencies, setCompetencies, onNext, onBack, loading }: CompetencyListProps) {
+export function CompetencyList({ competencies, setCompetencies, onNext, onBack, loading, progress, loadingStatus }: CompetencyListProps) {
     const [newCompName, setNewCompName] = useState('');
     const [newCompDesc, setNewCompDesc] = useState('');
 
@@ -94,10 +97,26 @@ export function CompetencyList({ competencies, setCompetencies, onNext, onBack, 
                 </div>
 
                 <div className="flex justify-between pt-4">
-                    <Button variant="outline" onClick={onBack}>Back</Button>
-                    <Button onClick={onNext} disabled={loading || competencies.length === 0}>
-                        {loading ? 'Generating Questions...' : 'Generate Questions'}
-                    </Button>
+                    <Button variant="outline" onClick={onBack} disabled={loading}>Back</Button>
+                    <div className="flex-1 flex justify-end items-center gap-4">
+                        {loading && (
+                            <div className="flex-1 max-w-xs flex flex-col gap-1">
+                                <div className="flex justify-between text-xs text-muted-foreground">
+                                    <span>{loadingStatus || 'Processing...'}</span>
+                                    <span>{progress}%</span>
+                                </div>
+                                <Progress value={progress} className="h-2" />
+                            </div>
+                        )}
+                        <Button onClick={onNext} disabled={loading || competencies.length === 0} className="min-w-[160px]">
+                            {loading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Generating...
+                                </>
+                            ) : 'Generate Questions'}
+                        </Button>
+                    </div>
                 </div>
             </CardContent>
         </Card>
