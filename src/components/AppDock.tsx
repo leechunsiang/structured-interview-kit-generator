@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, LayoutGrid, User, LogOut } from 'lucide-react';
+import { Home, LayoutGrid, User, LogOut, Users } from 'lucide-react';
 import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
 import { useAuth } from '@/components/AuthProvider';
 import MatrixText from '@/components/kokonutui/matrix-text';
@@ -37,6 +37,12 @@ export function AppDock() {
             icon: User,
             onClick: () => navigate('/profile'),
             isActive: location.pathname === '/profile',
+        },
+        {
+            title: 'Organization',
+            icon: Users,
+            onClick: () => navigate('/organization'),
+            isActive: location.pathname === '/organization',
         },
     ];
 

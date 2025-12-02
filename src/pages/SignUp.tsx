@@ -48,7 +48,7 @@ export function SignUp() {
 
             // If session is established immediately:
             if (authData.session) {
-                navigate('/generator');
+                navigate('/organization-setup');
             } else {
                 // Email confirmation required
                 setError('Please check your email to confirm your account before logging in.');

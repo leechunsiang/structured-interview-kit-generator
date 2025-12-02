@@ -38,7 +38,21 @@ export function Login() {
 
             if (error) throw error;
 
-            navigate('/generator');
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('organization_id')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile?.organization_id) {
+                    navigate('/generator');
+                } else {
+                    navigate('/organization-setup');
+                }
+            }
         } catch (err: any) {
             setError(err.message);
         } finally {
