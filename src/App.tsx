@@ -11,6 +11,7 @@ import { AllJobs } from './pages/AllJobs';
 import { JobDetails } from './pages/JobDetails';
 import { OrganizationSetup } from './pages/OrganizationSetup';
 import { Organization } from './pages/Organization';
+import { Admin } from './pages/Admin';
 import { AppLayout } from './components/AppLayout';
 import { Toaster } from 'sonner';
 
@@ -39,6 +40,7 @@ function App() {
               <Route path="/all-jobs" element={<AllJobs />} />
               <Route path="/dashboard/:jobId" element={<JobDetails />} />
               <Route path="/organization" element={<Organization />} />
+              <Route path="/admin" element={<Admin />} />
             </Route>
           </Route>
         </Routes>

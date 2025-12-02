@@ -1,14 +1,17 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, LayoutGrid, User, LogOut, Users } from 'lucide-react';
+import { Home, LayoutGrid, User, LogOut, Users, ShieldCheck } from 'lucide-react';
 import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
 import { useAuth } from '@/components/AuthProvider';
 import MatrixText from '@/components/kokonutui/matrix-text';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 export function AppDock() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { signOut } = useAuth();
+    const { signOut, user } = useAuth();
+    const [userRole, setUserRole] = useState<'admin' | 'member' | null>(null);
 
     const handleLogout = async () => {
         try {
@@ -18,6 +21,27 @@ export function AppDock() {
             console.error('Error signing out:', error);
         }
     };
+
+    // Fetch user role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            if (!user) return;
+
+            try {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', user.id)
+                    .single();
+
+                setUserRole(profile?.role || 'member');
+            } catch (error) {
+                console.error('Error fetching user role:', error);
+            }
+        };
+
+        fetchUserRole();
+    }, [user]);
 
     const navItems = [
         {
@@ -32,6 +56,19 @@ export function AppDock() {
             onClick: () => navigate('/dashboard'),
             isActive: location.pathname.startsWith('/dashboard'),
         },
+    ];
+
+    // Add Admin option if user is admin
+    if (userRole === 'admin') {
+        navItems.push({
+            title: 'Admin',
+            icon: ShieldCheck,
+            onClick: () => navigate('/admin'),
+            isActive: location.pathname === '/admin',
+        });
+    }
+
+    navItems.push(
         {
             title: 'Profile',
             icon: User,
@@ -43,8 +80,8 @@ export function AppDock() {
             icon: Users,
             onClick: () => navigate('/organization'),
             isActive: location.pathname === '/organization',
-        },
-    ];
+        }
+    );
 
     return (
         <div className='fixed top-0 left-0 right-0 z-50 border-b bg-background'>

@@ -5,7 +5,7 @@ import { useAuth } from '../components/AuthProvider';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Loader2, Calendar, ArrowRight, FolderOpen, Trash2 } from 'lucide-react';
+import { Loader2, Calendar, ArrowRight, FolderOpen, Trash2, Send, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Job {
@@ -14,11 +14,17 @@ interface Job {
     description: string;
     created_at: string;
     kit_score?: number;
+    status: 'draft' | 'pending' | 'approved' | 'rejected';
+    submitted_at?: string;
+    reviewed_at?: string;
+    reviewed_by?: string;
+    rejection_reason?: string;
 }
 
 export function Dashboard() {
     const { user } = useAuth();
     const [jobs, setJobs] = useState<Job[]>([]);
+    const [submittingJobId, setSubmittingJobId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -77,6 +83,114 @@ export function Dashboard() {
         }
     };
 
+    const handleSubmitJob = async (e: React.MouseEvent, jobId: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!window.confirm('Submit this job for admin approval? You will not be able to view the kit until it is approved.')) {
+            return;
+        }
+
+        setSubmittingJobId(jobId);
+        try {
+            const { error } = await supabase
+                .from('jobs')
+                .update({
+                    status: 'pending',
+                    submitted_at: new Date().toISOString()
+                })
+                .eq('id', jobId);
+
+            if (error) throw error;
+
+            // Update local state
+            setJobs(jobs.map(job =>
+                job.id === jobId
+                    ? { ...job, status: 'pending', submitted_at: new Date().toISOString() }
+                    : job
+            ));
+        } catch (error) {
+            console.error('Error submitting job:', error);
+            alert('Failed to submit the job. Please try again.');
+        } finally {
+            setSubmittingJobId(null);
+        }
+    };
+
+    const getStatusBadge = (status: string) => {
+        const styles = {
+            draft: 'bg-gray-100 text-gray-700 border-gray-200',
+            pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+            approved: 'bg-green-100 text-green-700 border-green-200',
+            rejected: 'bg-red-100 text-red-700 border-red-200'
+        };
+
+        const icons = {
+            draft: Clock,
+            pending: Clock,
+            approved: CheckCircle,
+            rejected: XCircle
+        };
+
+        const Icon = icons[status as keyof typeof icons];
+
+        return (
+            <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold border-2 ${styles[status as keyof typeof styles]}`}>
+                <Icon className="h-3 w-3" />
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+            </div>
+        );
+    };
+
+    const renderActionButton = (job: Job) => {
+        const isSubmitting = submittingJobId === job.id;
+
+        switch (job.status) {
+            case 'draft':
+                return (
+                    <Button
+                        onClick={(e) => handleSubmitJob(e, job.id)}
+                        disabled={isSubmitting}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                        {isSubmitting ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                            <>
+                                <Send className="mr-2 h-4 w-4" />
+                                Submit for Approval
+                            </>
+                        )}
+                    </Button>
+                );
+            case 'pending':
+                return (
+                    <Button disabled className="w-full" variant="outline">
+                        <Clock className="mr-2 h-4 w-4" />
+                        Pending Approval
+                    </Button>
+                );
+            case 'approved':
+                return (
+                    <Button asChild variant="outline" className="w-full group-hover:border-blue-600 group-hover:text-blue-600 transition-all">
+                        <Link to={`/dashboard/${job.id}`}>
+                            View Kit
+                            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
+                        </Link>
+                    </Button>
+                );
+            case 'rejected':
+                return (
+                    <Button disabled className="w-full" variant="destructive">
+                        <XCircle className="mr-2 h-4 w-4" />
+                        Rejected
+                    </Button>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
 
@@ -116,8 +230,11 @@ export function Dashboard() {
                                         <Calendar className="h-3 w-3" />
                                         {format(new Date(job.created_at), 'MMM d, yyyy')}
                                     </CardDescription>
-                                    {job.kit_score !== undefined && job.kit_score > 0 && (
-                                        <div className="absolute top-4 right-14">
+                                    <div className="absolute top-4 right-14">
+                                        {getStatusBadge(job.status)}
+                                    </div>
+                                    {job.kit_score !== undefined && job.kit_score > 0 && job.status === 'approved' && (
+                                        <div className="absolute top-4 right-28">
                                             <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs border-2 ${job.kit_score >= 80 ? 'bg-green-100 text-green-700 border-green-200' :
                                                 job.kit_score >= 60 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
                                                     'bg-red-100 text-red-700 border-red-200'
@@ -140,12 +257,18 @@ export function Dashboard() {
                                     <p className="text-sm text-muted-foreground line-clamp-3">
                                         {job.description}
                                     </p>
-                                    <Button asChild variant="outline" className="w-full mt-auto group-hover:border-blue-600 group-hover:text-blue-600 transition-all">
-                                        <Link to={`/dashboard/${job.id}`}>
-                                            View Kit
-                                            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
-                                        </Link>
-                                    </Button>
+                                    {job.status === 'rejected' && job.rejection_reason && (
+                                        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
+                                            <p className="text-xs font-semibold text-red-900 mb-1 flex items-center gap-1">
+                                                <AlertCircle className="h-3 w-3" />
+                                                Rejection Reason:
+                                            </p>
+                                            <p className="text-xs text-red-700">{job.rejection_reason}</p>
+                                        </div>
+                                    )}
+                                    <div className="mt-auto">
+                                        {renderActionButton(job)}
+                                    </div>
                                 </CardContent>
                             </Card>
                         ))}
