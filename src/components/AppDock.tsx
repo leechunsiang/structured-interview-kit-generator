@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, LayoutGrid, User, LogOut, Users, ShieldCheck } from 'lucide-react';
+import { Home, LayoutGrid, LogOut, Users, Briefcase } from 'lucide-react';
 import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
 import { useAuth } from '@/components/AuthProvider';
 import MatrixText from '@/components/kokonutui/matrix-text';
@@ -62,19 +62,13 @@ export function AppDock() {
     if (userRole === 'admin') {
         navItems.push({
             title: 'Admin',
-            icon: ShieldCheck,
+            icon: Briefcase,
             onClick: () => navigate('/admin'),
             isActive: location.pathname === '/admin',
         });
     }
 
     navItems.push(
-        {
-            title: 'Profile',
-            icon: User,
-            onClick: () => navigate('/profile'),
-            isActive: location.pathname === '/profile',
-        },
         {
             title: 'Organization',
             icon: Users,

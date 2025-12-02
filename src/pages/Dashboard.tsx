@@ -252,34 +252,34 @@ export function Dashboard() {
                                 key={job.id}
                                 className="flex flex-col hover:shadow-elevated-lg hover:scale-[1.02] cursor-pointer transition-all group"
                                 onClick={() => handleCardClick(job)}
-                            >                                <CardHeader className="relative pr-12">
-                                    <CardTitle className="line-clamp-1 text-xl" title={job.title}>{job.title}</CardTitle>
+                            >                                <CardHeader>
+                                    <div className="flex items-start justify-between gap-2 mb-2">
+                                        <CardTitle className="text-xl flex-1 break-words" title={job.title}>{job.title}</CardTitle>
+                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                            {job.kit_score !== undefined && job.kit_score > 0 && job.status === 'approved' && (
+                                                <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs border-2 ${job.kit_score >= 80 ? 'bg-green-100 text-green-700 border-green-200' :
+                                                    job.kit_score >= 60 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
+                                                        'bg-red-100 text-red-700 border-red-200'
+                                                    }`}>
+                                                    {job.kit_score}
+                                                </div>
+                                            )}
+                                            {getStatusBadge(job.status)}
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                                                onClick={(e) => handleDeleteJob(e, job.id)}
+                                                title="Delete Kit"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
                                     <CardDescription className="flex items-center gap-1">
                                         <Calendar className="h-3 w-3" />
                                         {format(new Date(job.created_at), 'MMM d, yyyy')}
                                     </CardDescription>
-                                    <div className="absolute top-4 right-14">
-                                        {getStatusBadge(job.status)}
-                                    </div>
-                                    {job.kit_score !== undefined && job.kit_score > 0 && job.status === 'approved' && (
-                                        <div className="absolute top-4 right-28">
-                                            <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs border-2 ${job.kit_score >= 80 ? 'bg-green-100 text-green-700 border-green-200' :
-                                                job.kit_score >= 60 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
-                                                    'bg-red-100 text-red-700 border-red-200'
-                                                }`}>
-                                                {job.kit_score}
-                                            </div>
-                                        </div>
-                                    )}
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute top-4 right-4 h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                                        onClick={(e) => handleDeleteJob(e, job.id)}
-                                        title="Delete Kit"
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-between gap-4">
                                     <p className="text-sm text-muted-foreground line-clamp-3">

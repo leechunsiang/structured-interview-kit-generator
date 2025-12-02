@@ -107,16 +107,24 @@ export function Admin() {
     const handleApprove = async (jobId: string) => {
         setProcessingJobId(jobId);
         try {
+            const reviewedAt = new Date().toISOString();
             const { error } = await supabase
                 .from('jobs')
                 .update({
                     status: 'approved',
-                    reviewed_at: new Date().toISOString(),
+                    reviewed_at: reviewedAt,
                     reviewed_by: user?.id
                 })
                 .eq('id', jobId);
 
             if (error) throw error;
+
+            // Optimistically update local state
+            setJobs(prevJobs => prevJobs.map(job =>
+                job.id === jobId
+                    ? { ...job, status: 'approved' as const, reviewed_at: reviewedAt, reviewed_by: user?.id }
+                    : job
+            ));
         } catch (error) {
             console.error('Error approving job:', error);
             alert('Failed to approve job. Please try again.');
@@ -139,17 +147,26 @@ export function Admin() {
 
         setProcessingJobId(selectedJob.id);
         try {
+            const reviewedAt = new Date().toISOString();
             const { error } = await supabase
                 .from('jobs')
                 .update({
                     status: 'rejected',
-                    reviewed_at: new Date().toISOString(),
+                    reviewed_at: reviewedAt,
                     reviewed_by: user?.id,
                     rejection_reason: rejectionReason
                 })
                 .eq('id', selectedJob.id);
 
             if (error) throw error;
+
+            // Optimistically update local state
+            setJobs(prevJobs => prevJobs.map(job =>
+                job.id === selectedJob.id
+                    ? { ...job, status: 'rejected' as const, reviewed_at: reviewedAt, reviewed_by: user?.id, rejection_reason: rejectionReason }
+                    : job
+            ));
+
             setRejectDialogOpen(false);
         } catch (error) {
             console.error('Error rejecting job:', error);
