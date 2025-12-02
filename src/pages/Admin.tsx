@@ -139,6 +139,10 @@ export function Admin() {
         setRejectDialogOpen(true);
     };
 
+    const handleJobClick = (jobId: string) => {
+        navigate(`/job/${jobId}`);
+    };
+
     const handleRejectConfirm = async () => {
         if (!selectedJob || !rejectionReason.trim()) {
             alert('Please provide a rejection reason.');
@@ -266,7 +270,11 @@ export function Admin() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredJobs.map((job) => (
-                                    <Card key={job.id} className="flex flex-col">
+                                    <Card
+                                        key={job.id}
+                                        className="flex flex-col cursor-pointer hover:shadow-lg transition-shadow"
+                                        onClick={() => handleJobClick(job.id)}
+                                    >
                                         <CardHeader>
                                             <div className="flex items-start justify-between gap-2 mb-2">
                                                 <CardTitle className="line-clamp-1 text-xl" title={job.title}>
@@ -302,7 +310,10 @@ export function Admin() {
                                             {job.status === 'pending' && (
                                                 <div className="flex gap-2 mt-auto">
                                                     <Button
-                                                        onClick={() => handleApprove(job.id)}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleApprove(job.id);
+                                                        }}
                                                         disabled={processingJobId === job.id}
                                                         className="flex-1 bg-green-600 hover:bg-green-700"
                                                     >
@@ -316,7 +327,10 @@ export function Admin() {
                                                         )}
                                                     </Button>
                                                     <Button
-                                                        onClick={() => handleRejectClick(job)}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleRejectClick(job);
+                                                        }}
                                                         disabled={processingJobId === job.id}
                                                         variant="destructive"
                                                         className="flex-1"

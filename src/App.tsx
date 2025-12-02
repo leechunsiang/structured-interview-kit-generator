@@ -43,6 +43,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/all-jobs" element={<AllJobs />} />
               <Route path="/dashboard/:jobId" element={<JobDetails />} />
+              <Route path="/job/:jobId" element={<JobDetails />} />
               <Route path="/organization" element={<Organization />} />
               <Route path="/admin" element={<Admin />} />
             </Route>
