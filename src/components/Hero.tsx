@@ -40,11 +40,11 @@ export function Hero() {
                     transition={{ duration: 0.5 }}
                     className="flex flex-col justify-center text-center max-w-4xl mx-auto"
                 >
-                    <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl pb-4 mb-2 leading-tight">
+                    <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl pb-4 mb-2 leading-tight">
                         <GradientText
                             colors={['#40ffaa', '#4079ff', '#40ffaa', '#4079ff', '#40ffaa']}
                             animationSpeed={3}
-                            className="inline-block overflow-visible leading-normal"
+                            className="inline-block overflow-visible leading-normal font-black"
                         >
                             Streamline Your Hiring Process
                         </GradientText>

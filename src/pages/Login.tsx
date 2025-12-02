@@ -61,7 +61,7 @@ export function Login() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-background">
             <Card className="w-full max-w-md">
                 <CardHeader>
                     <CardTitle>Login</CardTitle>
@@ -95,6 +95,10 @@ export function Login() {
                     </p>
                 </CardFooter>
             </Card>
+            <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <span>Powered by</span>
+                <img src="/kadoshAI.png" alt="kadoshAI" className="h-6 opacity-90 hover:opacity-100 transition-opacity" />
+            </div>
         </div>
     );
 }

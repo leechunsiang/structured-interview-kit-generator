@@ -12,6 +12,8 @@ import { JobDetails } from './pages/JobDetails';
 import { OrganizationSetup } from './pages/OrganizationSetup';
 import { Organization } from './pages/Organization';
 import { Admin } from './pages/Admin';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { EmailConfirmation } from './pages/EmailConfirmation';
 import { AppLayout } from './components/AppLayout';
 import { Toaster } from 'sonner';
 
@@ -32,6 +34,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/email-confirmation" element={<EmailConfirmation />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/organization-setup" element={<OrganizationSetup />} />
             <Route element={<AppLayout />}>
