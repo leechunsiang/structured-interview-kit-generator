@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { generateCompetencies, generateQuestions, generateKitScore } from '../lib/openai';
+import { generateCompetencies, generateQuestions, generateKitScore, suggestMoreCompetencies } from '../lib/openai';
 import { useAuth } from '../components/AuthProvider';
 import { supabase } from '../lib/supabase';
 import { JobInputForm } from '@/components/generator/JobInputForm';
@@ -17,6 +17,7 @@ export function Generator() {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [loadingStatus, setLoadingStatus] = useState('');
+    const [isSuggesting, setIsSuggesting] = useState(false);
     // State for data
     const [jobData, setJobData] = useState<{ title: string; description: string } | null>(null);
     const [competencies, setCompetencies] = useState<Competency[]>([]);
@@ -207,6 +208,24 @@ export function Generator() {
         }
     };
 
+    const handleSuggestMoreCompetencies = async () => {
+        if (!jobData) return;
+        setIsSuggesting(true);
+        try {
+            const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+            if (!apiKey) throw new Error('Missing OpenAI API Key');
+
+            const newCompetencies = await suggestMoreCompetencies(jobData.title, jobData.description, competencies, apiKey);
+            setCompetencies([...competencies, ...newCompetencies]);
+            toast.success(`Added ${newCompetencies.length} new competencies!`);
+        } catch (error: any) {
+            console.error('Error suggesting competencies:', error);
+            toast.error(error.message || 'Failed to suggest competencies.');
+        } finally {
+            setIsSuggesting(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
 
@@ -225,6 +244,8 @@ export function Generator() {
                         loading={loading}
                         progress={progress}
                         loadingStatus={loadingStatus}
+                        onSuggestMore={handleSuggestMoreCompetencies}
+                        isSuggesting={isSuggesting}
                     />
                 )}
 

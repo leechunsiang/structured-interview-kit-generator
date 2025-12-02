@@ -167,3 +167,60 @@ export async function generateKitScore(jobTitle: string, jobDescription: string,
         return { score: 0, explanation: "Failed to generate score." };
     }
 }
+
+export async function suggestMoreCompetencies(jobTitle: string, jobDescription: string, currentCompetencies: any[], apiKey: string) {
+    const prompt = `
+      You are an expert HR consultant. Based on the job description for ${jobTitle}, suggest 2-3 ADDITIONAL key competencies that are NOT in the current list.
+
+      Job Description:
+      ${jobDescription.substring(0, 3000)}
+
+      Current Competencies:
+      ${JSON.stringify(currentCompetencies.map(c => c.name))}
+
+      Return a JSON array of objects with "name" and "description" keys.
+      Example:
+      [
+        { "name": "Team Leadership", "description": "Ability to lead..." }
+      ]
+    `;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'gpt-4o',
+            messages: [
+                { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
+                { role: 'user', content: prompt }
+            ],
+            response_format: { type: 'json_object' }
+        }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Failed to suggest competencies');
+    }
+
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    let parsed;
+    try {
+        parsed = JSON.parse(content);
+    } catch (e) {
+        console.error("Failed to parse OpenAI response:", content);
+        return [];
+    }
+
+    if (Array.isArray(parsed)) return parsed;
+    if (parsed.competencies && Array.isArray(parsed.competencies)) return parsed.competencies;
+
+    // Fallback: try to find any array in the object
+    const values = Object.values(parsed);
+    const arrayValue = values.find(v => Array.isArray(v));
+    return arrayValue || [];
+}

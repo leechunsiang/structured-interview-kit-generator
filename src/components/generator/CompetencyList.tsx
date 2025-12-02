@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import { Progress } from '@/components/ui/progress';
-import { Trash2, Plus, Loader2 } from 'lucide-react';
+import { Trash2, Plus, Loader2, Sparkles } from 'lucide-react';
 
 export interface Competency {
     id?: string;
@@ -19,9 +19,11 @@ interface CompetencyListProps {
     loading: boolean;
     progress?: number;
     loadingStatus?: string;
+    onSuggestMore: () => void;
+    isSuggesting?: boolean;
 }
 
-export function CompetencyList({ competencies, setCompetencies, onNext, onBack, loading, progress, loadingStatus }: CompetencyListProps) {
+export function CompetencyList({ competencies, setCompetencies, onNext, onBack, loading, progress, loadingStatus, onSuggestMore, isSuggesting }: CompetencyListProps) {
     const [newCompName, setNewCompName] = useState('');
     const [newCompDesc, setNewCompDesc] = useState('');
 
@@ -109,6 +111,22 @@ export function CompetencyList({ competencies, setCompetencies, onNext, onBack, 
                                 placeholder="Describe the requirements for this competency..."
                                 className="bg-transparent border-none shadow-none text-sm text-muted-foreground focus-visible:ring-0 px-0"
                             />
+                            <div className="pt-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={onSuggestMore}
+                                    disabled={loading || isSuggesting}
+                                    className="text-primary hover:text-primary hover:bg-primary/10 border-primary/20"
+                                >
+                                    {isSuggesting ? (
+                                        <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                                    ) : (
+                                        <Sparkles className="mr-2 h-3 w-3" />
+                                    )}
+                                    Suggest more with AI
+                                </Button>
+                            </div>
                         </div>
                         <Button
                             onClick={handleAdd}
