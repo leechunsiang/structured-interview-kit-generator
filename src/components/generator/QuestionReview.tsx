@@ -22,9 +22,10 @@ interface QuestionReviewProps {
     onBack: () => void;
     onGenerateMore: () => void;
     loading: boolean;
+    isEditingExisting?: boolean;
 }
 
-export function QuestionReview({ questions, setQuestions, onNext, onBack, onGenerateMore, loading }: QuestionReviewProps) {
+export function QuestionReview({ questions, setQuestions, onNext, onBack, onGenerateMore, loading, isEditingExisting = false }: QuestionReviewProps) {
 
     const handleDelete = (index: number) => {
         const newQuestions = [...questions];
@@ -54,12 +55,14 @@ export function QuestionReview({ questions, setQuestions, onNext, onBack, onGene
                     <p className="text-lg text-muted-foreground mt-2">Review and refine the generated questions.</p>
                 </div>
                 <div className="space-x-2">
-                    <Button variant="secondary" onClick={onGenerateMore} disabled={loading}>
-                        {loading ? 'Generating...' : 'Generate More'}
-                    </Button>
-                    <Button variant="outline" onClick={onBack} size="lg">Back</Button>
+                    {!isEditingExisting && (
+                        <Button variant="secondary" onClick={onGenerateMore} disabled={loading}>
+                            {loading ? 'Generating...' : 'Generate More'}
+                        </Button>
+                    )}
+                    <Button variant="outline" onClick={onBack} size="lg">{isEditingExisting ? 'Cancel' : 'Back'}</Button>
                     <Button onClick={onNext} disabled={loading || questions.length === 0} size="lg">
-                        {loading ? 'Saving...' : 'Finalize Kit'}
+                        {loading ? 'Saving...' : (isEditingExisting ? 'Save Changes' : 'Finalize Kit')}
                     </Button>
                 </div>
             </div>
@@ -180,9 +183,9 @@ export function QuestionReview({ questions, setQuestions, onNext, onBack, onGene
                 </Card>
             ))}
             <div className="flex justify-between pt-6 pb-12">
-                <Button variant="outline" onClick={onBack} size="lg" className="text-base">Back</Button>
+                <Button variant="outline" onClick={onBack} size="lg" className="text-base">{isEditingExisting ? 'Cancel' : 'Back'}</Button>
                 <Button onClick={onNext} disabled={loading || questions.length === 0} size="lg" className="text-base">
-                    {loading ? 'Saving...' : 'Finalize Kit'}
+                    {loading ? 'Saving...' : (isEditingExisting ? 'Save Changes' : 'Finalize Kit')}
                 </Button>
             </div>
         </div>

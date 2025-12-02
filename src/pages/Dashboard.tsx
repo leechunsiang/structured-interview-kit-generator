@@ -4,7 +4,7 @@ import { useAuth } from '../components/AuthProvider';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, Calendar, ArrowRight, FolderOpen, Trash2, Send, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -23,6 +23,7 @@ interface Job {
 
 export function Dashboard() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [jobs, setJobs] = useState<Job[]>([]);
     const [submittingJobId, setSubmittingJobId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -83,6 +84,11 @@ export function Dashboard() {
         }
     };
 
+    const handleCardClick = (job: Job) => {
+        // Navigate to kit details regardless of status
+        navigate(`/dashboard/${job.id}`);
+    };
+
     const handleSubmitJob = async (e: React.MouseEvent, jobId: string) => {
         e.preventDefault();
         e.stopPropagation();
@@ -97,7 +103,8 @@ export function Dashboard() {
                 .from('jobs')
                 .update({
                     status: 'pending',
-                    submitted_at: new Date().toISOString()
+                    submitted_at: new Date().toISOString(),
+                    rejection_reason: null // Clear rejection reason on resubmission
                 })
                 .eq('id', jobId);
 
@@ -106,7 +113,7 @@ export function Dashboard() {
             // Update local state
             setJobs(jobs.map(job =>
                 job.id === jobId
-                    ? { ...job, status: 'pending', submitted_at: new Date().toISOString() }
+                    ? { ...job, status: 'pending', submitted_at: new Date().toISOString(), rejection_reason: undefined }
                     : job
             ));
         } catch (error) {
@@ -181,10 +188,28 @@ export function Dashboard() {
                 );
             case 'rejected':
                 return (
-                    <Button disabled className="w-full" variant="destructive">
-                        <XCircle className="mr-2 h-4 w-4" />
-                        Rejected
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button asChild variant="outline" className="flex-1">
+                            <Link to={`/dashboard/${job.id}`}>
+                                <ArrowRight className="mr-2 h-4 w-4" />
+                                View Kit
+                            </Link>
+                        </Button>
+                        <Button
+                            onClick={(e) => handleSubmitJob(e, job.id)}
+                            disabled={isSubmitting}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <>
+                                    <Send className="mr-2 h-4 w-4" />
+                                    Resubmit
+                                </>
+                            )}
+                        </Button>
+                    </div>
                 );
             default:
                 return null;
@@ -223,8 +248,11 @@ export function Dashboard() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {jobs.map((job) => (
-                            <Card key={job.id} className="flex flex-col hover:shadow-elevated-lg hover:scale-[1.02] cursor-pointer group">
-                                <CardHeader className="relative pr-12">
+                            <Card
+                                key={job.id}
+                                className="flex flex-col hover:shadow-elevated-lg hover:scale-[1.02] cursor-pointer transition-all group"
+                                onClick={() => handleCardClick(job)}
+                            >                                <CardHeader className="relative pr-12">
                                     <CardTitle className="line-clamp-1 text-xl" title={job.title}>{job.title}</CardTitle>
                                     <CardDescription className="flex items-center gap-1">
                                         <Calendar className="h-3 w-3" />
