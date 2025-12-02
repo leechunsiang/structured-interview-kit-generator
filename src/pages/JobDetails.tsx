@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { AppHeader } from '../components/AppHeader';
+
 import { KitPreview } from '@/components/generator/KitPreview';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowLeft } from 'lucide-react';
@@ -82,7 +82,7 @@ export function JobDetails() {
     if (loading) {
         return (
             <div className="min-h-screen bg-background">
-                <AppHeader />
+
                 <div className="flex justify-center items-center h-[calc(100vh-64px)]">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
@@ -93,7 +93,7 @@ export function JobDetails() {
     if (!job) {
         return (
             <div className="min-h-screen bg-background">
-                <AppHeader />
+
                 <div className="container mx-auto py-8 px-4 text-center">
                     <h2 className="text-2xl font-bold mb-4">Job Not Found</h2>
                     <Button asChild>
@@ -106,7 +106,7 @@ export function JobDetails() {
 
     return (
         <div className="min-h-screen bg-background">
-            <AppHeader />
+
             <main className="container mx-auto py-8 px-4">
                 <div className="mb-6">
                     <Button variant="ghost" asChild className="mb-4 pl-0 hover:pl-2 transition-all">

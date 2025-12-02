@@ -6,7 +6,7 @@ import { JobInputForm } from '@/components/generator/JobInputForm';
 import { CompetencyList, type Competency } from '@/components/generator/CompetencyList';
 import { QuestionReview, type Question } from '@/components/generator/QuestionReview';
 import { KitPreview } from '@/components/generator/KitPreview';
-import { AppHeader } from '@/components/AppHeader';
+
 import { toast } from 'sonner';
 
 type Step = 'job-input' | 'competency-review' | 'question-review' | 'kit-preview';
@@ -209,7 +209,7 @@ export function Generator() {
 
     return (
         <div className="min-h-screen bg-background">
-            <AppHeader />
+
 
             <main className="container mx-auto py-12 px-6 max-w-5xl">
                 {step === 'job-input' && (

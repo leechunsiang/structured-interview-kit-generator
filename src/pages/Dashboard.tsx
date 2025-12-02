@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../components/AuthProvider';
-import { AppHeader } from '../components/AppHeader';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -78,7 +78,7 @@ export function Dashboard() {
 
     return (
         <div className="min-h-screen bg-background">
-            <AppHeader />
+
             <main className="container mx-auto py-12 px-6">
                 <div className="flex justify-between items-center mb-10">
                     <h1 className="text-4xl font-bold">Dashboard</h1>
