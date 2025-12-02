@@ -7,6 +7,7 @@ import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { Generator } from './pages/Generator';
 import { Dashboard } from './pages/Dashboard';
+import { AllJobs } from './pages/AllJobs';
 import { JobDetails } from './pages/JobDetails';
 import { OrganizationSetup } from './pages/OrganizationSetup';
 import { Organization } from './pages/Organization';
@@ -35,6 +36,7 @@ function App() {
             <Route element={<AppLayout />}>
               <Route path="/generator" element={<Generator />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/all-jobs" element={<AllJobs />} />
               <Route path="/dashboard/:jobId" element={<JobDetails />} />
               <Route path="/organization" element={<Organization />} />
             </Route>

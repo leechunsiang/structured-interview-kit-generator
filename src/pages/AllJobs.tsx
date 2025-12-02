@@ -14,9 +14,10 @@ interface Job {
     description: string;
     created_at: string;
     kit_score?: number;
+    profile_id?: string; // Optional as older jobs might not have it
 }
 
-export function Dashboard() {
+export function AllJobs() {
     const { user } = useAuth();
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(true);
@@ -38,7 +39,6 @@ export function Dashboard() {
                         .from('jobs')
                         .select('*')
                         .eq('org_id', profile.organization_id)
-                        .eq('profile_id', user.id)
                         .order('created_at', { ascending: false });
 
                     if (error) throw error;
@@ -82,10 +82,10 @@ export function Dashboard() {
 
             <main className="container mx-auto py-12 px-6">
                 <div className="flex justify-between items-center mb-10">
-                    <h1 className="text-4xl font-bold">My Dashboard</h1>
+                    <h1 className="text-4xl font-bold">All Organization Jobs</h1>
                     <div className="flex gap-4">
                         <Button asChild variant="outline" size="lg">
-                            <Link to="/all-jobs">View All Jobs</Link>
+                            <Link to="/dashboard">My Dashboard</Link>
                         </Button>
                         <Button asChild variant="accent" size="lg">
                             <Link to="/generator">Create New Kit</Link>
@@ -126,6 +126,12 @@ export function Dashboard() {
                                             </div>
                                         </div>
                                     )}
+                                    {/* Only allow deletion if the user owns the job? Or admins? 
+                                        For now, keeping it same as dashboard, but maybe we should hide delete if not owner?
+                                        The requirement didn't specify, but it's safer to hide it if not owner.
+                                        However, the RLS "Users can delete org jobs" allows any org member to delete.
+                                        So I will leave it as is for now.
+                                    */}
                                     <Button
                                         variant="ghost"
                                         size="icon"
@@ -155,4 +161,3 @@ export function Dashboard() {
         </div>
     );
 }
-

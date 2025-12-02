@@ -121,6 +121,7 @@ export function Generator() {
                 .from('jobs')
                 .insert({
                     org_id: profile.organization_id,
+                    profile_id: user.id,
                     title: jobData.title,
                     description: jobData.description,
                     kit_score: generatedKitScore.score,
