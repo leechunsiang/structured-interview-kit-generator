@@ -2,7 +2,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, LayoutGrid, LogOut, Users, Briefcase } from 'lucide-react';
 import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
 import { useAuth } from '@/components/AuthProvider';
-import MatrixText from '@/components/kokonutui/matrix-text';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
@@ -81,33 +80,9 @@ export function AppDock() {
         <div className='fixed top-0 left-0 right-0 z-50 border-b bg-background'>
             <div className='relative flex items-center justify-between px-6 h-20'>
                 {/* Logo, Text, and Subtitle on Left */}
+                {/* Title on Left */}
                 <div className="flex items-center gap-4">
-                    <Link to="/generator" className="flex items-center gap-3 transition-all hover:opacity-80">
-                        <img src="/kadoshAI_logo.png" alt="kadoshAI Logo" className="h-8 w-auto" />
-                        <div className="flex items-center gap-2">
-                            <div style={{ fontWeight: 900, WebkitTextStroke: '0.5px currentColor' }}>
-                                <MatrixText
-                                    text="Kadosh"
-                                    className="!min-h-0 text-4xl font-black font-['Work_Sans']"
-                                    letterAnimationDuration={300}
-                                    initialDelay={0}
-                                />
-                            </div>
-                            <div style={{ fontWeight: 900, WebkitTextStroke: '0.5px currentColor' }}>
-                                <MatrixText
-                                    text="AI"
-                                    className="!min-h-0 text-4xl font-black text-[#6DE2B5] font-['Work_Sans']"
-                                    letterAnimationDuration={300}
-                                    initialDelay={300}
-                                />
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-
-                {/* Centered Title */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-bold text-foreground tracking-tight">
-                    Structured Interview Kit Generator
+                     <span className="text-xl font-bold text-foreground tracking-tight">Structured Interview Kit Generator</span>
                 </div>
 
                 {/* Navigation Dock and Logout on Right */}

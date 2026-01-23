@@ -3,6 +3,7 @@ import { AuthProvider } from './components/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Hero } from './components/Hero';
 import { Header } from './components/Header';
+import { LandingFooter } from './components/LandingFooter';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { Generator } from './pages/Generator';
@@ -22,6 +23,7 @@ function LandingPage() {
     <div className="min-h-screen bg-background text-foreground">
       <Header />
       <Hero />
+      <LandingFooter />
     </div>
   );
 }
