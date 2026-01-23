@@ -2,7 +2,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, LayoutGrid, LogOut, Users, Briefcase } from 'lucide-react';
 import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
 import { useAuth } from '@/components/AuthProvider';
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
